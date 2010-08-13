@@ -7,7 +7,7 @@
 \title{GPU Optimization for magma Matrices}
 
 \description{
-Retrieve or set the flag for GPU (graphics processing unit) optimaztion of an \linkS4class{magma} matrix.
+Retrieve or set the flag for GPU (graphics processing unit) optimization of an \linkS4class{magma} matrix.
 }
 
 \usage{
@@ -18,7 +18,7 @@ Retrieve or set the flag for GPU (graphics processing unit) optimaztion of an \l
 \arguments{
   \item{object}{a \linkS4class{magma} class object.}
   \item{value}{logical.  If \code{TRUE}, gpu-optimized parallel algorithms are
-  utlizied for matrix operations, when available.  Otherwise, more
+  utilized for matrix operations, when available.  Otherwise, more
   general-purpose parallel algorithms are used.}
 }
 

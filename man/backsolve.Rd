@@ -12,7 +12,7 @@
 Solves a system of linear equations where the coefficient matrix is upper (or \sQuote{right}, \sQuote{R}) or lower (\sQuote{left}, \sQuote{L}) triangular using parallelized computational algorithms.
 
 \code{x <- backsolve(R, b)} solves \eqn{R x = b}{R * x = b}, and \cr
-\code{x <- forwardsovle(L, b)} solve \eqn{L x = b}{L * x = b}, respecitvely.
+\code{x <- forwardsolve(L, b)} solve \eqn{L x = b}{L * x = b}, respectively.
 }
 
 \usage{

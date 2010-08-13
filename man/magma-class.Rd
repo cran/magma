@@ -56,7 +56,7 @@ Objects can be created by calls of the form \code{new("magma", data, nrow, ncol,
     \code{list} of two character components.  They are set if not
     \code{\link{NULL}} (as per default).}
     \item{\code{gpu}}{logical.  If \code{TRUE}, gpu-optimized parallel algorithms are
-    utlizied for matrix operations, when available (default).  Otherwise, more
+    utilized for matrix operations, when available (default).  Otherwise, more
     general-purpose parallel algorithms are used.}
   }
 }

@@ -1,7 +1,7 @@
 \name{magma}
 \alias{magma}
 
-\title{magma Matrices for Parallel Computing}
+\title{Matrix Class "magma" Constructor}
 
 \description{
 Constructs a \linkS4class{magma} class object that inherits from \linkS4class{matrix}.
@@ -22,7 +22,7 @@ magma(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
   \code{list} of two character components.  They are set if not
   \code{\link{NULL}} (as per default).}
   \item{gpu}{logical.  If \code{TRUE}, gpu-optimized parallel algorithms are
-  utlizied for matrix operations, when available (default).  Otherwise, more
+  utilized for matrix operations, when available (default).  Otherwise, more
   general-purpose parallel algorithms are used.}
 }
 

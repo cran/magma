@@ -6,7 +6,7 @@
 \title{The LU Decomposition}
 
 \description{
-Computes an LU factorization of an \eqn{m \times n}{m * n} general matrix \eqn{A} using partial pivoting with row interchanges.
+Parallelized computation of an LU factorization of an \eqn{m \times n}{m * n} general matrix \eqn{A} using partial pivoting with row interchanges.
 }
 
 \usage{

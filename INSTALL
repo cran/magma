@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 magma R Package Version 0.2.1
-Installation and Release Notes (8/8/2010)
+Installation and Release Notes (8/13/2010)
 Package Maintainer: Brian J. Smith <brian-j-smith@uiowa.edu>
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -115,7 +115,11 @@ systems):
       To make the assignment permanent, place this command in ~/.bashrc.  When
       using the C Shell, the command is
 
-         setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:<library-path>"
+         setenv LD_LIBRARY_PATH <library-path>
+
+         or, to append the path to an existing assignment,
+
+         setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:<library-path>
 
       which can be place in ~/.cshrc to make the assignment permanent.
 
@@ -152,7 +156,7 @@ commands:
 
   R command prompt
   ----------------
-  install.packages(magma, configure.args = "<options>")
+  install.packages("magma", configure.args = "<options>")
 
 where <option> are optional configuration arguments that can be supplied to
 change default files and locations, and include
@@ -175,9 +179,9 @@ the particular LAPACK implementation being used.
 
 Example:
 
-The following illustrate installation of magma package release 0.2.1-1 on a
+The following illustrate installation of magma package release 0.2.1-2 on a
 system in which CUDA is installed in '/opt/cuda', MAGMA shared libraries in
-'/opt/magma/lib', and with a ldconfig-registerd LAPACK library named
+'/opt/magma/lib', and with a ldconfig-registered LAPACK library named
 'liblapack.so' (the default for --with-lapack):
 
   Terminal command prompt
@@ -186,11 +190,11 @@ system in which CUDA is installed in '/opt/cuda', MAGMA shared libraries in
     --configure-args="
        --with-cuda-home=/opt/cuda \
        --with-magma-lib=/opt/magma/lib" \
-    magma_0.2.1-1.tar.gz
+    magma_0.2.1-2.tar.gz
 
   R command prompt
   ----------------
-  install.packages(magma,
+  install.packages("magma",
     configure.args = "--with-cuda-home=/opt/cuda
       --with-magma-lib=/opt/magma/lib"
   )
@@ -280,5 +284,4 @@ Quadro: FX 4800, FX 5800, Plex 2200 D2, Plex 7000
 ATI
 ---
 None
-
 
