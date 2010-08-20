@@ -21,9 +21,9 @@ magma(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
   \item{dimnames}{a \code{\link{dimnames}} attribute for the matrix: a
   \code{list} of two character components.  They are set if not
   \code{\link{NULL}} (as per default).}
-  \item{gpu}{logical.  If \code{TRUE}, gpu-optimized parallel algorithms are
-  utilized for matrix operations, when available (default).  Otherwise, more
-  general-purpose parallel algorithms are used.}
+  \item{gpu}{logical.  If \code{TRUE}, the MAGMA library GPU interface is used
+  for matrix operations, when available (default).  Otherwise, the CPU interface
+  is used.}
 }
 
 \value{
@@ -32,6 +32,14 @@ Returns a \linkS4class{magma} class matrix.  The arguments \code{nrow}, \code{nc
 
 \details{
 If either of \code{nrow} or \code{ncol} is not given, an attempt is made to infer its value from the length of \code{data} and the other parameter.
+
+The MAGMA library of C functions offers two LAPACK-style interfaces, referred to
+as the \bold{GPU interface} and the \bold{CPU interface}.  The GPU interface
+takes input and produces results in the GPU's memory, whereas the CPU interface
+produces results in the CPU's memory.  The GPU and CPU interfaces, although
+similar, are not derivatives of each other, but instead have different
+communication patters.  The \code{gpu} argument allows specification of the
+interface to be used for caluculations involving the resulting magma matrix.
 }
 
 \author{

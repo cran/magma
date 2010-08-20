@@ -1,9 +1,9 @@
 citEntry(entry="misc",
   title = "R package magma: Matrix Algebra on GPU and Multicore Architectures, Version 0.2.1",
   author = personList(person("Brian", "Smith", "J.", "brian-j-smith@uiowa.edu")),
-  year = "August 13, 2010",
+  year = "August 20, 2010",
   note = "[On-line] http://cran.r-project.org/package=magma",
-  textVersion = paste("Smith, B.J. (August 13, 2010)",
+  textVersion = paste("Smith, B.J. (August 20, 2010)",
     "R package magma: Matrix Algebra on GPU and Multicore Architectures, Version 0.2.1,",
     "[On-line] http://cran.r-project.org/package=magma."),
   header = "To cite magma in publications use"

@@ -21,7 +21,7 @@ forwardsolve(l, x, k = ncol(l), upper.tri=FALSE, transpose=FALSE)
 }
 
 \arguments{
-  \item{r,l}{an upper (or lower) triangular matrix-like object giving the
+  \item{r, l}{an upper (or lower) triangular matrix-like object giving the
   coefficients for the system to be solved. Values below (above) the diagonal
   are ignored.}
   \item{x}{a matrix-like object whose columns give the right-hand sides for the

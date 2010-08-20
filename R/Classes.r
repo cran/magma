@@ -71,8 +71,8 @@ setReplaceMethod("gpu", "magma",
 
 setMethod("show", "magma",
    function(object) {
-      cat(nrow(object), "x", ncol(object), "magma matrix",
-          ifelse(object@gpu, "with", "without"), "GPU optimization\n\n")
+      cat(nrow(object), "x", ncol(object), "magma matrix with",
+          ifelse(object@gpu, "GPU", "CPU"), "interface\n\n")
       print(as(object, "matrix"))
    }
 )

@@ -55,9 +55,12 @@ Objects can be created by calls of the form \code{new("magma", data, nrow, ncol,
     \item{\code{dimnames}}{a \code{\link{dimnames}} attribute for the matrix: a
     \code{list} of two character components.  They are set if not
     \code{\link{NULL}} (as per default).}
-    \item{\code{gpu}}{logical.  If \code{TRUE}, gpu-optimized parallel algorithms are
-    utilized for matrix operations, when available (default).  Otherwise, more
-    general-purpose parallel algorithms are used.}
+    \item{\code{gpu}}{logical.  If \code{FALSE}, heterogeneous CPU+GPU parallel
+    algorithms are utilized for matrix operations (default).  Otherwise, GPU-only
+    parallel algorithms are used, if available.}
+    \item{\code{gpu}}{logical.  If \code{TRUE}, the MAGMA library GPU interface is used
+    for matrix operations, when available (default).  Otherwise, the CPU interface
+    is used.}
   }
 }
 
@@ -124,6 +127,14 @@ Class \code{"\linkS4class{vector}"}, by class "matrix", distance 4, with explici
 
 \details{
 It is possible to mix R \pkg{base} scalars, matrices, and vectors, with \code{"magma"} class objects.  In general, magma matrices can be used in operations and functions that support \code{"matrix"} class objects.
+
+The MAGMA library of C functions offers two LAPACK-style interfaces, referred to
+as the \bold{GPU interface} and the \bold{CPU interface}.  The GPU interface
+takes input and produces results in the GPU's memory, whereas the CPU interface
+produces results in the CPU's memory.  The GPU and CPU interfaces, although
+similar, are not derivatives of each other, but instead have different
+communication patters.  Magma objects have a \code{gpu} slot that specifies
+the interface to be used for matrix and linear algebra operations.
 }
 
 \author{
