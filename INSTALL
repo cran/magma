@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-magma R Package Version 0.2.1
-Installation and Release Notes (8/20/2010)
+magma R Package Version 0.2.2
+Installation and Release Notes (8/27/2010)
 Package Maintainer: Brian J. Smith <brian-j-smith@uiowa.edu>
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -61,8 +61,9 @@ I. (c) Supported operating systems
 --------------------------------------------------------------------------------
 
 * Development and testing of the package is performed on 64-bit Ubuntu Linux
-  10.04 with version 4.3.4 of the gcc tools.  Other 64-bit Linux distributions
-  should work as well.
+  10.04 with.  Other 64-bit Linux distributions should work as well.
+  Development is conducted with release 4.3 of the GCC tools; release 4.4 is
+  not supported and may cause errors.
 
 * At this time, the package has not been tried on OS X, although input from any
   attempts to do so are welcome.  Windows is not supported currently due to a
@@ -179,7 +180,7 @@ the particular LAPACK implementation being used.
 
 Example:
 
-The following illustrate installation of magma package release 0.2.1-2 on a
+The following illustrate installation of magma package release 0.2.2-1 on a
 system in which CUDA is installed in '/opt/cuda', MAGMA shared libraries in
 '/opt/magma/lib', and with a ldconfig-registered LAPACK library named
 'liblapack.so' (the default for --with-lapack):
@@ -190,7 +191,7 @@ system in which CUDA is installed in '/opt/cuda', MAGMA shared libraries in
     --configure-args="
        --with-cuda-home=/opt/cuda \
        --with-magma-lib=/opt/magma/lib" \
-    magma_0.2.1-2.tar.gz
+    magma_0.2.2-1.tar.gz
 
   R command prompt
   ----------------

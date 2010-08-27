@@ -32,7 +32,7 @@ SEXP magChol(SEXP a)
 {
    SEXP gpu = GET_SLOT(a, install("gpu")),
         b = PROTECT(NEW_OBJECT(MAKE_CLASS("magma")));
-   int *DIMA = INTEGER(GET_DIM(a)), N = DIMA[0], info;
+   int *DIMA = INTEGER(GET_DIM(a)), N = DIMA[0], N2 = N * N, info;
    double *B, *d_B;
 
    if(DIMA[1] != N) error("non-square matrix");
@@ -41,11 +41,11 @@ SEXP magChol(SEXP a)
    SET_SLOT(b, install("gpu"), duplicate(gpu));
    B = REAL(b);
 
-   cublasAlloc(N * N, sizeof(double), (void**)&d_B);
+   cublasAlloc(N2, sizeof(double), (void**)&d_B);
    checkCublasError("device memory allocation failed in 'magChol'");
 
    
-   if(LOGICAL_VALUE(gpu) || 1) {
+   if(LOGICAL_VALUE(gpu)) {
       int NB = magma_get_dpotrf_nb(N);
       double *h_work;
 
@@ -53,18 +53,26 @@ SEXP magChol(SEXP a)
       checkCudaError("host memory allocation failed in 'magChol'");
 
       // BUG 0.2: if uplo = "U" then info > 0 for large N
-      // cublasSetVector(N * N, sizeof(double), B, 1, d_B, 1);
+      // cublasSetVector(N2, sizeof(double), B, 1, d_B, 1);
       // magma_dpotrf_gpu("U", &N, d_B, &N, h_work, info);
-      // cublasGetVector(N * N, sizeof(double), d_B, 1, B, 1);
+      // cublasGetVector(N2, sizeof(double), d_B, 1, B, 1);
 
-      cublasSetVector(N * N, sizeof(double), B, 1, d_B, 1);
+      cublasSetVector(N2, sizeof(double), B, 1, d_B, 1);
       magma_dpotrf_gpu("L", &N, d_B, &N, h_work, &info);
-      cublasGetVector(N * N, sizeof(double), d_B, 1, B, 1);
+      cublasGetVector(N2, sizeof(double), d_B, 1, B, 1);
 
       cudaFreeHost(h_work);
    } else {
-      // BUG 0.2: throws invalid argument CUDA error for large N
-      magma_dpotrf("L", &N, B, &N, d_B, &info);
+      double *h_B;
+
+      cudaMallocHost((void**)&h_B, N2 * sizeof(double));
+      checkCudaError("host memory allocation failed in 'magChol'");
+      
+      memcpy(h_B, B, N2 * sizeof(double));
+      magma_dpotrf("L", &N, h_B, &N, d_B, &info);
+      memcpy(B, h_B, N2 * sizeof(double));
+
+      cudaFreeHost(h_B);
    }
 
    if(info < 0) error("illegal argument %d in 'magChol", -1 * info);
@@ -175,7 +183,7 @@ SEXP magQR(SEXP a)
       checkCudaError("host memory allocation failed in 'magQR'");
 
       cublasSetVector(M * N, sizeof(double), A, 1, d_A, 1);
-      magma_dgeqrf_gpu2(&M, &N, d_A, &M, tau, h_work, &LWORK, d_work, &info);
+      magma_dgeqrf_gpu(&M, &N, d_A, &M, tau, h_work, &LWORK, d_work, &info);
       cublasGetVector(M * N, sizeof(double), d_A, 1, A, 1);
       cublasGetVector(N * NB, sizeof(double), d_work, 1, work, 1);
 

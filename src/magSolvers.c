@@ -65,7 +65,7 @@ SEXP magCholSolve(SEXP a, SEXP b)
       UNPROTECT(1);
    }
 
-   if(info) error("Illegal argument in 'magCholSolve'");
+   if(info < 0) error("Illegal argument %d in 'magCholSolve'", -1 * info);
 
    UNPROTECT(1);
 
@@ -215,7 +215,11 @@ SEXP magSolve(SEXP a, SEXP b)
       cublasSetVector(N * NRHS, sizeof(double), REAL(c), 1, d_B, 1);
 
       magma_dgetrf_gpu(&N, &N, d_A, &LDA, ipiv, h_work, &info);
+      if(info < 0) error("illegal argument %d in 'magSolve'", -1 * info);
+      else if(info > 0) error("non-singular matrix");
+
       magma_dgetrs_gpu("N", N, NRHS, d_A, LDA, ipiv, d_B, N, &info, h_work);
+      if(info < 0) error("illegal argument %d in 'magSolve'", -1 * info);
 
       cublasGetVector(N * NRHS, sizeof(double), d_B, 1, REAL(c), 1);
 
@@ -227,12 +231,12 @@ SEXP magSolve(SEXP a, SEXP b)
       double *A = REAL(PROTECT(AS_NUMERIC(duplicate(a))));
 
       dgesv_(&N, &NRHS, A, &N, ipiv, REAL(c), &N, &info);
-
+      if(info < 0) error("illegal argument %d in 'magSolve'", -1 * info);
+      else if(info > 0) error("non-singular matrix");
+   
       UNPROTECT(1);
    }
 
-   if(info) error("Illegal or singular argument in 'magSolve'");
-   
    UNPROTECT(1);
 
    return c;

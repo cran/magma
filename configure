@@ -2520,16 +2520,14 @@ if test -z "${check_R}"; then
 	as_fn_error "R not found!" "$LINENO" 5
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: setting R header files to ${R_INCLUDE_DIR}" >&5
+$as_echo "setting R header files to ${R_INCLUDE_DIR}" >&6; }
 R_CPICFLAGS=`"${R_HOME}/bin/R" CMD config CPICFLAGS`
-R_INC=`"${R_HOME}/bin/R" CMD config --cppflags`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: setting R header files to ${R_INC}" >&5
-$as_echo "setting R header files to ${R_INC}" >&6; }
-NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 ${R_CPICFLAGS} ${R_INC}\""
+NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 ${R_CPICFLAGS} -I${R_INCLUDE_DIR}\""
 
-R_LIBS=`"${R_HOME}/bin/R" CMD config --ldflags`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: setting R libraries to ${R_LIBS}" >&5
-$as_echo "setting R libraries to ${R_LIBS}" >&6; }
-LIBS="${LIBS} ${R_LIBS}"
+#R_LIBS=`"${R_HOME}/bin/R" CMD config --ldflags`
+#AC_MSG_RESULT([setting R libraries to ${R_LIBS}])
+#LIBS="${LIBS} ${R_LIBS}"
 
 
 

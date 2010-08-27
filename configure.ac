@@ -73,14 +73,9 @@ if test -z "${check_R}"; then
 	AC_MSG_ERROR([R not found!])
 fi 
 
+AC_MSG_RESULT([setting R header files to ${R_INCLUDE_DIR}])
 R_CPICFLAGS=`"${R_HOME}/bin/R" CMD config CPICFLAGS`
-R_INC=`"${R_HOME}/bin/R" CMD config --cppflags`
-AC_MSG_RESULT([setting R header files to ${R_INC}])
-NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 ${R_CPICFLAGS} ${R_INC}\""
-
-R_LIBS=`"${R_HOME}/bin/R" CMD config --ldflags`
-AC_MSG_RESULT([setting R libraries to ${R_LIBS}])
-LIBS="${LIBS} ${R_LIBS}"
+NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 ${R_CPICFLAGS} -I${R_INCLUDE_DIR}\""
 
 
 AC_SUBST([NVCC])
