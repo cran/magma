@@ -1,4 +1,4 @@
-AC_INIT([magma], 0.2.1)
+AC_INIT([magma], 1.3.0)
 AC_CONFIG_AUX_DIR([tools])
 
 #################### GCC Compiler ####################
@@ -18,7 +18,7 @@ NVCC=${CUDA_HOME}/bin/nvcc
 AC_CHECK_FILE([${NVCC}],,
 	[AC_MSG_ERROR([nvcc not found!])])
 
-NCFLAGS="-arch=sm_13 -O2"
+NCFLAGS="-arch=sm_13 -O2 -DADD_"
 CUDA_INC=${CUDA_HOME}/include
 AC_MSG_CHECKING([for CUDA headers])
 AC_CHECK_FILE([${CUDA_INC}/cublas.h],
@@ -48,7 +48,7 @@ AC_ARG_WITH([lapack],
 
 #################### MAGMA Libraries ####################
 
-NCFLAGS="${NCFLAGS} -I./magma_0.2/include"
+NCFLAGS="${NCFLAGS} -I./include"
 
 AC_ARG_WITH([magma-lib],
 	[AC_HELP_STRING([--with-magma-lib=DIR],
@@ -75,7 +75,7 @@ fi
 
 AC_MSG_RESULT([setting R header files to ${R_INCLUDE_DIR}])
 R_CPICFLAGS=`"${R_HOME}/bin/R" CMD config CPICFLAGS`
-NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 ${R_CPICFLAGS} -I${R_INCLUDE_DIR}\""
+NCFLAGS="${NCFLAGS} -Xcompiler \"-O2 -DADD_ ${R_CPICFLAGS} -I${R_INCLUDE_DIR}\""
 
 
 AC_SUBST([NVCC])

@@ -55,9 +55,6 @@ Objects can be created by calls of the form \code{new("magma", data, nrow, ncol,
     \item{\code{dimnames}}{a \code{\link{dimnames}} attribute for the matrix: a
     \code{list} of two character components.  They are set if not
     \code{\link{NULL}} (as per default).}
-    \item{\code{gpu}}{logical.  If \code{FALSE}, heterogeneous CPU+GPU parallel
-    algorithms are utilized for matrix operations (default).  Otherwise, GPU-only
-    parallel algorithms are used, if available.}
     \item{\code{gpu}}{logical.  If \code{TRUE}, the MAGMA library GPU interface is used
     for matrix operations, when available (default).  Otherwise, the CPU interface
     is used.}

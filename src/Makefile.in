@@ -2,7 +2,7 @@
 NVCC := @NVCC@
 
 # Program-specifics
-OBJS := magAriths.o magFactors.o magSolvers.o magUtils.o ./magma_0.2/testing/get_nb.o
+OBJS := magAriths.o magFactors.o magSolvers.o magUtils.o
 TARGET := magma.so
 
 # Compiler options

@@ -37,31 +37,30 @@ SEXP magMultmm(SEXP a, SEXP transa, SEXP b, SEXP transb)
        LDA = DIMA[0], LDB = DIMB[0], LDC = M;
    char TRANSA = (TA ? 'T' : 'N'), TRANSB = (TB ? 'T' : 'N');
    double *A = REAL(PROTECT(AS_NUMERIC(a))), *B = REAL(PROTECT(AS_NUMERIC(b))),
-          *d_A, *d_B, *d_C;
+          *dA, *dB, *dC;
  
    if(DIMB[TB] != K) error("non-conformable matrices");
 
    c = SET_SLOT(c, install(".Data"), allocMatrix(REALSXP, M, N));
    SET_SLOT(c, install("gpu"), duplicate(gpu));
    
-   cublasAlloc(M * K, sizeof(double), (void**)&d_A);
-   cublasAlloc(K * N, sizeof(double), (void**)&d_B);
-   cublasAlloc(M * N, sizeof(double), (void**)&d_C);
-   checkCublasError("device memory allocation failed in 'magMultmm'");
+   magma_malloc((void**)&dA, (M*K)*sizeof(double));
+   magma_malloc((void**)&dB, (K*N)*sizeof(double));
+   magma_malloc((void**)&dC, (M*N)*sizeof(double));
 
-   cublasSetVector(M * K, sizeof(double), A, 1, d_A, 1);
-   cublasSetVector(K * N, sizeof(double), B, 1, d_B, 1);
+   magma_dsetmatrix(DIMA[0], DIMA[1], A, LDA, dA, LDA);
+   magma_dsetmatrix(DIMB[0], DIMB[1], B, LDB, dB, LDB);
 
    if(LOGICAL_VALUE(gpu))
-      magmablas_dgemm(TRANSA, TRANSB, M, N, K, 1.0, d_A, LDA, d_B, LDB, 0.0, d_C, LDC);
+      magmablas_dgemm(TRANSA, TRANSB, M, N, K, 1.0, dA, LDA, dB, LDB, 0.0, dC, LDC);
    else
-      cublasDgemm(TRANSA, TRANSB, M, N, K, 1.0, d_A, LDA, d_B, LDB, 0.0, d_C, LDC);
+      cublasDgemm(TRANSA, TRANSB, M, N, K, 1.0, dA, LDA, dB, LDB, 0.0, dC, LDC);
 
-   cublasGetVector(M * N, sizeof(double), d_C, 1, REAL(c), 1);
+   magma_dgetmatrix(M, N, dC, LDC, REAL(c), LDC);
 
-   cublasFree(d_A);
-   cublasFree(d_B);
-   cublasFree(d_C);
+   magma_free(dA);
+   magma_free(dB);
+   magma_free(dC);
 
    UNPROTECT(3);
 
@@ -75,10 +74,10 @@ SEXP magMultmv(SEXP a, SEXP transa, SEXP x, SEXP right)
         y = PROTECT(NEW_OBJECT(MAKE_CLASS("magma")));
    int RHS = LOGICAL_VALUE(right), TA = (LOGICAL_VALUE(transa) ^ !RHS),
        *DIMA = INTEGER(GET_DIM(a)),       
-       M = DIMA[0], N = DIMA[1], LENX = LENGTH(x), LENY = DIMA[TA], LDA = M;
+       M = DIMA[0], N = DIMA[1], LENX = LENGTH(x), LENY = DIMA[TA], LDA=M;
    char TRANSA = (TA ? 'T' : 'N');
    double *A = REAL(PROTECT(AS_NUMERIC(a))), *X = REAL(PROTECT(AS_NUMERIC(x))),
-          *d_A, *d_X, *d_Y;
+          *dA, *dX, *dY;
 
    if(DIMA[!TA] != LENX) error("non-conformable matrices");
 
@@ -86,29 +85,24 @@ SEXP magMultmv(SEXP a, SEXP transa, SEXP x, SEXP right)
                 allocMatrix(REALSXP, (RHS ? LENY : 1), (RHS ? 1 : LENY)));
    SET_SLOT(y, install("gpu"), duplicate(gpu));
 
-   cublasAlloc(M * N, sizeof(double), (void**)&d_A);
-   cublasAlloc(LENX, sizeof(double), (void**)&d_X);
-   cublasAlloc(LENY, sizeof(double), (void**)&d_Y);
-   checkCublasError("device memory allocation failed in 'magMultmv'");
+   magma_malloc((void**)&dA, (M*N)*sizeof(double));
+   magma_malloc((void**)&dX, LENX*sizeof(double));
+   magma_malloc((void**)&dY, LENY*sizeof(double));
 
-   cublasSetVector(M * N, sizeof(double), A, 1, d_A, 1);
-   cublasSetVector(LENX, sizeof(double), X, 1, d_X, 1);
+   magma_dsetmatrix(M, N, A, LDA, dA, LDA);
+   magma_dsetvector(LENX, X, 1, dX, 1);
 
    if(LOGICAL_VALUE(gpu)) {
-      if(TA)
-         // BUG 0.2: Only computes first M elements of N-dimensional vector z
-         // magmablas_dgemvt(M, N, 1.0, d_A, LDA, d_X, d_Y);
-         cublasDgemv(TRANSA, M, N, 1.0, d_A, LDA, d_X, 1, 0.0, d_Y, 1);
-      else magmablas_dgemv(M, N, d_A, LDA, d_X, d_Y);
+      magmablas_dgemv(TRANSA, M, N, 1.0, dA, LDA, dX, 1, 0.0, dY, 1);
    } else {
-      cublasDgemv(TRANSA, M, N, 1.0, d_A, LDA, d_X, 1, 0.0, d_Y, 1);
+      cublasDgemv(TRANSA, M, N, 1.0, dA, LDA, dX, 1, 0.0, dY, 1);
    }
 
-   cublasGetVector(LENY, sizeof(double), d_Y, 1, REAL(y), 1);
+   magma_dgetvector(LENY, dY, 1, REAL(y), 1);
 
-   cublasFree(d_A);
-   cublasFree(d_X);
-   cublasFree(d_Y);
+   magma_free(dA);
+   magma_free(dX);
+   magma_free(dY);
 
    UNPROTECT(3);
 
